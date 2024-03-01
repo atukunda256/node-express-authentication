@@ -1,12 +1,14 @@
 import { Schema, model, Document, Model, HydratedDocument } from "mongoose";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { UserRole } from "../middleware/roles";
 
 export interface IUser extends Document {
   name: string;
   email: string;
   password: string;
   tokens: {token: string }[];
+  role: UserRole
 }
 
 export interface IUserMethods {
@@ -26,6 +28,7 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>({
   email: { type: String, required: true },
   password: { type: String, required: true },
   tokens: [{ token: { type: String, required: true } }],
+  role: { type: String, required: true, default: UserRole.User}
 });
 
 userSchema.pre("save", async function (next) {

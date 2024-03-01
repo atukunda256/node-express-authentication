@@ -40,3 +40,8 @@ export const loginUser = async (user: Partial<IUser>) => {
     token,
   };
 };
+
+export const fetchUsers = async () => {
+  const users = await User.find({});
+  return users;
+}

@@ -1,7 +1,12 @@
 import express from "express";
 import { IUser } from "../models/user";
-import { loginUser, registerUser } from "../controllers/userController";
+import {
+  fetchUsers,
+  loginUser,
+  registerUser,
+} from "../controllers/userController";
 import auth, { CustomRequest } from "../middleware/auth";
+import { isAdmin } from "../middleware/roles";
 
 const router = express.Router();
 
@@ -64,6 +69,12 @@ router.post("/logoutall", auth, async (req: CustomRequest, res) => {
   return res.status(200).json({
     message: "User logged out from all devices successfully.",
   });
+});
+
+// Fetch all users. This route is only accessible by the admin.
+router.get("/admin", auth, isAdmin, async (req, res) => {
+  const allUsers = await fetchUsers();
+  return res.status(200).json(allUsers);
 });
 
 export default router;
